@@ -1,0 +1,8 @@
+.DS_Store
+log/*
+tmp/*
+config/settings.yml
+public/uploads/*
+public/attachments/*
+public/notes/*
+.bundle\n

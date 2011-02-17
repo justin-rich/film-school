@@ -1,0 +1,54 @@
+<% if @title %>
+  <h2 class="title"><%= @title %></h2>
+<% end %>
+
+<ul id="films" class="<%= numColumns(@films.size) %>">  
+  <% @films.each do |film| %>
+  <li class="film">
+    <div class="poster">
+      <a href="/search/<%= film.netflix_id %>">
+        <img title="<%= film.title %>" src="<%= film.box_art(imgSize(@films.size)) %>" />
+      </a>
+    </div>
+  </li>
+  <% end %>
+</ul>
+
+<%= partial :'../shared/search' %>
+<%= partial :'../shared/menu' %>
+<%= partial :'../shared/controls' %>
+
+<script type="text/javascript" charset="utf-8">  	
+	$(document).keydown(function(e){		
+    switch (e.keyCode) { 
+		case 37: {
+			prevPage();
+			break;
+		}		
+		case 39: {
+		  <% unless @films && (@films.size < @limit) %>
+			  nextPage();
+			<% end %>
+			break;
+		}
+    case 192: {
+      menuModalBox();
+      break;
+    }
+    case 191: {
+      searchModalBox();
+      break;
+    }
+  }});
+  
+  // $('#films').bind('mousewheel', function(event, delta) {
+  //     if (Math.abs(delta) > 20) {
+  //       if (delta > 0) {
+  //         prevPage();
+  //       } else{
+  //         nextPage();
+  //       };
+  //     };
+  //     return false;
+  // });
+</script>

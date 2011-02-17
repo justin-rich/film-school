@@ -1,0 +1,48 @@
+<div id="director">
+
+
+  <ul id="films" class="<%= numColumns(@films.size) %>">  
+    <% @films.each do |film| %>
+    <li class="film">
+      <div class="poster">
+          <a href="/search/<%= film.netflix_id %>">
+          <img title="<%= film.title %>" src="<%= film.box_art(imgSize(@films.size)) %>" />
+        </a>
+      </div>
+    </li>
+    <% end %>
+  </ul>
+  
+  <h2><%= @actor.name %></h2>
+  
+  <% if @actor.bio %>
+  <div class="bio">
+    <%= @actor.bio %>  
+  </div>
+  <% end %>  
+</div>
+
+
+<%= partial :'../shared/search' %>
+<%= partial :'../shared/menu' %>
+<%= partial :'../shared/controls' %>
+
+<script type="text/javascript" charset="utf-8">
+  $(document).ready(function(){  	  	
+  	$(document).keydown(function(e){		
+      switch (e.keyCode) { 
+      case 38: {
+        upLevel();
+        break;
+      }
+      case 192: {
+        menuModalBox();
+        break;
+      }
+      case 191: {
+        searchModalBox();
+        break;
+      }
+    }});
+  });
+</script>

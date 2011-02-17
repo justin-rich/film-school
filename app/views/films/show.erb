@@ -1,0 +1,125 @@
+<div id="film">
+  <div class="left">
+    <img title="<%= @film.title %>" src="<%= @film.box_art("gsd") %>">
+    
+    <div class="rating">
+      <%= partial :rating %>      
+      <div>Avg <%= @film.average_rating %> stars</div>
+    </div>
+  
+    <% if @film.type == SavedFilm %>
+      <div class="filmTypeWanted">
+        <a href="<%= pass_the_popcorn_url(@film.title) %>">Download</a>
+      </div>
+      
+    <% elsif @film.type == TemporaryFilm %>
+      <div class="filmTypeTemporary">
+        <a id="saveFilm" href="#" style="#333333">Save</a>
+        <script type="text/javascript" charset="utf-8">
+          $("#saveFilm").click(function() {
+            $.post('/want-to-watch', 
+              { netflix_id: <%= @film.netflix_id %> },
+              function (data) {
+                window.location = data.url;
+              }
+            );                        
+            return false;
+        	});
+        </script>
+      </div>        
+    <% end %>                        
+    
+    
+    <% if !@film.similars.blank? %>
+    <div class="similars">
+      <% @film.similar_films.each do |film| %>
+        <a href="/search/<%= film.netflix_id %>">
+          <img title="<%= film.title %>" src="<%= film.box_art("small") %>" />
+        </a>
+      <% end %>
+    </div>    
+    <% end %>
+    
+  </div>
+  
+  <div class="right">    
+    <h2 class="title"><%= @film.title %></h2>
+    
+    <ul class="misc">
+      <li><%= @film.year %></li>
+      <li class="mpaaRating"><%= @film.mpaa_rating %></li>
+      <li><%= @film.runtime %> Minutes</li>
+    </ul>
+    
+    <div class="synopsis">
+      <%= @film.fulltext %>        
+    </div>
+    
+    <table>
+      <tr class="director peopleList">
+        <td class="peopleListCategory">Director</td>
+        <td>
+          <% @film.directors.each do |director| %>
+            <a href="/directors/<%= director.to_param %>"><%= director.name %></a><% unless @film.directors.last == director %>,<% end %>            
+          <% end %>
+        </td>
+      </tr>
+    
+      <tr class="cast peopleList">
+         <td class="peopleListCategory">Cast</td>
+         <td>
+         
+         <% @film.actors.each do |actor| %>
+           <a href="/actors/<%= actor.to_param %>"><%= actor.name %></a><% unless @film.actors.last == actor %>,<% end %>            
+         <% end %>
+         </td>         
+      </tr>
+      
+      <% unless @film.written_by.blank? %>
+      <tr class="writers peopleList">
+        <td class="peopleListCategory">Written by</td><td><%= @film.written_by %></td>
+      </tr>
+      <% end %>      
+    
+      <% unless @film.cinematographer.blank? %>
+      <tr class="cinematographer peopleList">
+        <td class="peopleListCategory">Cinematographer</td><td><%= @film.cinematographer %></td>
+      </tr>
+      <% end %>      
+      
+      <tr class="genres peopleList">
+        <td class="peopleListCategory">Genres</td>
+        <td>
+          <% @film.genres.each do |genre| %>
+            <a href="/genres/<%= genre.to_param %>"><%= genre.name %></a><% unless @film.genres.last == genre %>,<% end %>            
+          <% end %>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<%= partial :'../shared/search' %>
+<%= partial :'../shared/menu' %>
+<%= partial :'../shared/controls' %>
+
+<script type="text/javascript" charset="utf-8">
+    initializeRatingUI( <%= @film.netflix_id %>);
+    updateRatingForFilm(<%= @film.netflix_id %>);    
+
+  	$(document).keydown(function(e){		
+      switch (e.keyCode) { 
+      case 38: {
+        upLevel();
+        break;
+      }
+      case 192: {
+        menuModalBox();
+        break;
+      }
+      case 191: {
+        searchModalBox();
+        break;
+      }
+    }});
+</script>

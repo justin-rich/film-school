@@ -1,0 +1,13 @@
+<div>
+  <form id="rating" action="/rating?format=json" method="post" accept-charset="utf-8">
+    <!-- Loops setting value from 0.2 to 5.0, incrementing by 0.1 each iteration -->
+    <% (0..4).each do |index1| %>
+      <% [2,4,6,8,0].each do |index2| %>
+        <% left = index2 == 0 ? index1 + 1 : index1 %>
+        <input value="<%= left %>.<%= index2 %>" name="star" type="radio" class="star {split:5}"/>
+      <% end %>
+    <% end %>
+  </form>
+</div>
+
+<br clear="all" />
